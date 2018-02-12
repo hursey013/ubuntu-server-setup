@@ -35,7 +35,13 @@ function main() {
     disableSudoPassword "${username}"
     addSSHKey "${username}" "${sshKey}"
     changeSSHConfig
+
+    # Retrieve new lists of packages
+    sudo apt-get update
+
+    echo "Installing Uncomplicated Firewall (UFW)... " >&3
     setupUfw
+
     setupTimezone
 
     echo "Installing Network Time Protocol... " >&3

@@ -70,7 +70,6 @@ function setTimezone() {
 
 # Configure Network Time Protocol
 function configureNTP() {
-    sudo apt-get update
     sudo apt-get --assume-yes install ntp
 }
 
