@@ -5,8 +5,7 @@ This is a setup script to automate the setup and provisioning of Ubuntu servers.
 * Disables password authentication to the server
 * Deny root login to the server
 * Setup Uncomplicated Firewall
-* Create Swap file based on machine's installed memory
-* Setup the timezone for the server (Default to "Asia/Singapore")
+* Setup the timezone for the server (Default to "America/New_York")
 * Install Network Time Protocol
 
 # Installation

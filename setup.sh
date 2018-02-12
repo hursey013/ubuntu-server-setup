@@ -36,11 +36,6 @@ function main() {
     addSSHKey "${username}" "${sshKey}"
     changeSSHConfig
     setupUfw
-
-    if ! hasSwap; then
-        setupSwap
-    fi
-
     setupTimezone
 
     echo "Installing Network Time Protocol... " >&3
@@ -51,17 +46,6 @@ function main() {
     cleanup
 
     echo "Setup Done! Log file is located at ${output_file}" >&3
-}
-
-function setupSwap() {
-    createSwap
-    mountSwap
-    tweakSwapSettings "10" "50"
-    saveSwapSettings "10" "50"
-}
-
-function hasSwap() {
-    [[ "$(sudo swapon -s)" == *"/swapfile"* ]]
 }
 
 function cleanup() {
