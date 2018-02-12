@@ -53,6 +53,7 @@ function changeSSHConfig() {
 
 # Setup the Uncomplicated Firewall
 function setupUfw() {
+    sudo apt-get --assume-yes install ufw
     sudo ufw allow OpenSSH
     yes y | sudo ufw enable
 }
@@ -122,7 +123,7 @@ function configureNTP() {
 function getPhysicalMemory() {
     local phymem
     phymem="$(free -g|awk '/^Mem:/{print $2}')"
-    
+
     if [[ ${phymem} == '0' ]]; then
         echo 1
     else
