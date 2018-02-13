@@ -4,18 +4,11 @@
 # Arguments:
 #   Account Username
 #   Account Password
-#   Flag to determine if user account is added silently. (With / Without GECOS prompt)
 function addUserAccount() {
     local username=${1}
     local password=${2}
-    local silent_mode=${3}
 
-    if [[ ${silent_mode} == "true" ]]; then
-        sudo adduser --disabled-password --gecos '' "${username}"
-    else
-        sudo adduser --disabled-password "${username}"
-    fi
-
+    sudo adduser --disabled-password "${username}"
     echo "${username}:${password}" | sudo chpasswd
     sudo usermod -aG sudo "${username}"
 }
@@ -45,10 +38,23 @@ function execAsUser() {
 }
 
 # Modify the sshd_config file
-# shellcheck disable=2116
 function changeSSHConfig() {
     sudo sed -re 's/^(\#?)(PasswordAuthentication)([[:space:]]+)yes/\2\3no/' -i."$(echo 'old')" /etc/ssh/sshd_config
     sudo sed -re 's/^(\#?)(PermitRootLogin)([[:space:]]+)(.*)/PermitRootLogin no/' -i /etc/ssh/sshd_config
+}
+
+# Setup Git
+# Arguments:
+#   Email Address
+#   Full Name
+function setGit() {
+    local gitEmail=${1}
+    local gitName=${2}
+
+    cd /home/"${username}"
+    execAsUser "${username}" "git config --global user.email \"${gitEmail}\""
+    execAsUser "${username}" "git config --global user.name \"${gitName}\""
+    cd "${current_dir}"
 }
 
 # Setup the Uncomplicated Firewall
@@ -71,18 +77,6 @@ function setTimezone() {
 # Configure Network Time Protocol
 function configureNTP() {
     sudo apt-get --assume-yes install ntp
-}
-
-# Gets the amount of physical memory in GB (rounded up) installed on the machine
-function getPhysicalMemory() {
-    local phymem
-    phymem="$(free -g|awk '/^Mem:/{print $2}')"
-
-    if [[ ${phymem} == '0' ]]; then
-        echo 1
-    else
-        echo "${phymem}"
-    fi
 }
 
 # Disables the sudo password prompt for a user account by editing /etc/sudoers

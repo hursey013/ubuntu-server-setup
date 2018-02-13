@@ -9,7 +9,6 @@ function getCurrentDir() {
 }
 
 function includeDependencies() {
-    # shellcheck source=./setupLibrary.sh
     source "${current_dir}/setupLibrary.sh"
 }
 
@@ -18,7 +17,10 @@ includeDependencies
 output_file="output.log"
 
 function main() {
-    read -rp "Enter the username of the new user account:" username
+    read -rp "Enter username of the new user account (Default is 'hursey013'):" username
+    if [ -z "${username}" ]; then
+        username="hursey013"
+    fi
 
     promptForPassword
 
@@ -28,6 +30,7 @@ function main() {
     addUserAccount "${username}" "${password}"
 
     read -rp $'Paste in the public SSH key for the new user:\n' sshKey
+
     echo 'Running setup script...'
     logTimestamp "${output_file}"
 
@@ -35,6 +38,8 @@ function main() {
     disableSudoPassword "${username}"
     addSSHKey "${username}" "${sshKey}"
     changeSSHConfig
+
+    setupGit
 
     # Retrieve new lists of packages
     sudo apt-get update
@@ -69,8 +74,24 @@ function logTimestamp() {
     } >>"${filename}" 2>&1
 }
 
+function setupGit() {
+    echo -ne "Enter email address for Git config (Default is 'hursey013@protonmail.com'):" >&3
+    read -r gitEmail
+    if [ -z "${gitEmail}" ]; then
+        gitEmail="hursey013@protonmail.com"
+    fi
+
+    echo -ne "Enter full name for Git config (Default is 'Brian Hurst'):" >&3
+    read -r gitName
+    if [ -z "${gitName}" ]; then
+        gitName="Brian Hurst"
+    fi
+
+    setGit "${gitEmail}" "${gitName}"
+}
+
 function setupTimezone() {
-    echo -ne "Enter the timezone for the server (Default is 'America/New_York'):\n" >&3
+    echo -ne "Enter the timezone for the server (Default is 'America/New_York'):" >&3
     read -r timezone
     if [ -z "${timezone}" ]; then
         timezone="America/New_York"
