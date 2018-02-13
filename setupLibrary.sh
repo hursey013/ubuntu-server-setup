@@ -64,12 +64,6 @@ function setupUfw() {
     yes y | sudo ufw enable
 }
 
-function setupZsh() {
-    sudo apt-get --assume-yes install zsh git-core curl
-    execAsUser "${username}" "sh -c \"$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)\""
-    execAsUser "${username}" "chsh -s $(which zsh)"
-}
-
 # Set the machine's timezone
 # Arguments:
 #   tz data timezone

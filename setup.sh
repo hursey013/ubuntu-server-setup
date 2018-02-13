@@ -47,9 +47,6 @@ function main() {
     echo "Installing Uncomplicated Firewall (UFW)... " >&3
     setupUfw
 
-    echo "Installing Oh My Zsh... " >&3
-    setupZsh
-
     setupTimezone
 
     echo "Installing Network Time Protocol... " >&3
