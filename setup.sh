@@ -17,7 +17,7 @@ includeDependencies
 output_file="output.log"
 
 function main() {
-    read -rp "Enter username of the new user account (Default is 'hursey013'):" username
+    read -p "Enter username of the new user account (Default is 'hursey013'):" username
     if [ -z "${username}" ]; then
         username="hursey013"
     fi
@@ -46,6 +46,9 @@ function main() {
 
     echo "Installing Uncomplicated Firewall (UFW)... " >&3
     setupUfw
+
+    echo "Installing Oh My Zsh... " >&3
+    setupZsh
 
     setupTimezone
 
@@ -76,13 +79,13 @@ function logTimestamp() {
 
 function setupGit() {
     echo -ne "Enter email address for Git config (Default is 'hursey013@protonmail.com'):" >&3
-    read -r gitEmail
+    read gitEmail
     if [ -z "${gitEmail}" ]; then
         gitEmail="hursey013@protonmail.com"
     fi
 
     echo -ne "Enter full name for Git config (Default is 'Brian Hurst'):" >&3
-    read -r gitName
+    read gitName
     if [ -z "${gitName}" ]; then
         gitName="Brian Hurst"
     fi
